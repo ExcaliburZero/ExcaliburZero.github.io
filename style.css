@@ -1,0 +1,20 @@
+body{
+	background: #14005c;
+}
+
+#main{
+	border: 1px solid #001752;
+	margin: auto;
+	width: 80%;
+	background: #5324ff;
+}
+
+#header{
+	border-bottom: 1px solid #001752;
+	text-align: center;
+}
+
+#content{
+	color: #020008;
+	margin-left: 7px;
+}
