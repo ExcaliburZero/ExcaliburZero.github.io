@@ -1,5 +1,5 @@
 body{
-	background: #14005c;
+	background: #00005C;
 }
 
 #main{
@@ -18,4 +18,26 @@ body{
 #content{
 	color: #020008;
 	margin-left: 7px;
+}
+
+.image-on-right{
+	float: right;
+	margin: 5px;
+	margin-top: 2px;
+	padding: 3px;
+	font-size: 10px;
+	background: #c7b789;
+}
+
+.icon{
+	vertical-align: middle;
+}
+
+.icon-item{
+	text-decoration: none !important;
+	font-style: italic;
+}
+
+a{
+	color: #020008;
 }
