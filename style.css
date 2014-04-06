@@ -34,10 +34,14 @@ body{
 }
 
 .icon-item{
-	text-decoration: none !important;
-	font-style: italic;
 }
 
 a{
+	text-decoration: none !important;
 	color: #020008;
+	font-style: italic;
+}
+
+a:hover{
+	text-decoration: underline !important;
 }
