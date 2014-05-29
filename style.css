@@ -1,23 +1,86 @@
-body{
-	background: #00005C;
+/* Page Colors */
+/* Primary: #4479D4 */
+/* Secondary: #1049A9 */
+
+html, body {
+    	height: 100%;
+    	margin: 0;
+	background: #4479D4;
 }
 
 #main{
-	border: 1px solid #001752;
+	width: 100%;
 	margin: auto;
-	width: 80%;
-	background: #8999c7;
-	margin-top: 20px;
+	min-height: 100%;
+	position: relative;
 }
 
 #header{
-	border-bottom: 1px solid #001752;
+	background: #1049A9;
 	text-align: center;
 }
 
-#content{
+#navbar{
+	background: #1049A9;
+	text-align: center;
+	margin: 0 auto;
+	width: 80%;
+}
+
+#navbar ul{
+	list-style: none;
+	height: 2em;
+	padding: 0;
+}
+
+#navbar li{
+	float: left;
+	margin-right: 10px;
+}
+
+#navbar li a{
+	background: #081272;
+	border-radius: 10px;
+	text-decoration: none !important;
+	color: #C0AA2E; /* #020008; */
+	padding: 6px;
+}
+
+#navbar li a:hover{
+	background: #FFFFFF;
+	border-radius: 10px;
+	text-decoration: none !important;
 	color: #020008;
-	margin-left: 7px;
+}
+
+#footer{
+	background: #1049A9;
+	text-align: center;
+	height: 80px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+}
+
+#content{
+	width: 85%;
+	margin: auto;
+	color: #020008;
+	padding-bottom: 80px;
+}
+
+.gallery{
+
+}
+
+.gallery img{
+	border: 1px solid #000000;
+	margin-bottom: 5px;
+}
+
+#content hr{
+	border: 1px solid #1049A9;
 }
 
 .image-on-right{
@@ -36,12 +99,12 @@ body{
 .icon-item{
 }
 
-a{
+#content a{
 	text-decoration: none !important;
 	color: #020008;
 	font-style: italic;
 }
 
-a:hover{
+#content a:hover{
 	text-decoration: underline !important;
 }
