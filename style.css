@@ -40,7 +40,9 @@ html, body {
 
 #navbar li a{
 	background: #081272;
-	border-radius: 10px;
+	border-bottom-left-radius: 15px;
+	border-bottom-right-radius: 15px;
+	border-top-right-radius: 15px;
 	text-decoration: none !important;
 	color: #C0AA2E;
 	padding: 6px;
@@ -51,7 +53,6 @@ html, body {
 
 #navbar li a:hover{
 	background: #FFFFFF;
-	border-radius: 10px;
 	text-decoration: none !important;
 	color: #020008;
 }
@@ -102,9 +103,12 @@ html, body {
 	float: right;
 	margin: 5px;
 	margin-top: 2px;
-	padding: 3px;
+	padding: 8px;
 	font-size: 10px;
 	background: #c7b789;
+	border-bottom-left-radius: 15px;
+	border-bottom-right-radius: 15px;
+	border-top-right-radius: 15px;
 }
 
 .icon{
