@@ -77,6 +77,13 @@ html, body {
 	font-size: 13pt;
 }
 
+#content h2{
+	border-bottom: 1px solid black;
+	font-style: italic;
+	font-family: "Calisto MT", "Bookman Old Style", Bookman, "Goudy Old Style", Garamond, "Hoefler Text", "Bitstream Charter", Georgia, serif;
+	font-size: 18pt;
+}
+
 .gallery{
 	width: 100%;
 	text-align: center;
