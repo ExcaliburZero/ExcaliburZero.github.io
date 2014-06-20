@@ -1,4 +1,6 @@
-ExcaliburZero.github.io
-=======================
+#ExcaliburZero.github.io
 
-ExcaliburZero's website
+This is the GitHub repo for ExcaliburZero's website.
+
+##Website URL
+- http://excaliburzero.github.io/
