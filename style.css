@@ -119,6 +119,10 @@ html, body {
 .icon-item{
 }
 
+.no-italics{
+	font-style: normal;
+}
+
 #content a{
 	text-decoration: none !important;
 	color: #020008;
