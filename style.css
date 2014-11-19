@@ -121,8 +121,9 @@ html, body {
 
 .image-on-right{
 	float: right;
-	width: 40%;
-	margin: 5px;
+	max-width: 40%;
+	min-width: 300px;
+	margin: 15px;
 	margin-top: 2px;
 	padding: 8px;
 	font-size: 10px;
