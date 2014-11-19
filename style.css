@@ -29,21 +29,25 @@ html, body {
 #navbar{
 	background: #1049A9;
 	text-align: center;
-	margin: 0 auto;
+	margin: auto;
 	width: 80%;
+	height: 100%;
 }
 
 #navbar ul{
 	list-style: none;
-	height: 2em;
+	/*height: 2em;*/
 	padding: 0;
-	margin-bottom: 20px;
+	padding-bottom: 10px;
+	text-align: left;
 }
 
 #navbar li{
-	float: left;
-	margin-right: 15px;
-	margin-bottom: 20px;
+	/*float: left;*/
+	padding-right: 15px;
+	padding-bottom: 20px;
+	display: inline;
+	line-height: 40px;
 }
 
 #navbar li a{
