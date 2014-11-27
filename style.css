@@ -42,7 +42,6 @@ html, body {
 /* The navigation bar list inside the navigation bar div */
 #navbar ul{
 	list-style: none;
-	/*height: 2em;*/
 	padding: 0;
 	padding-bottom: 10px;
 	text-align: left;
@@ -50,7 +49,6 @@ html, body {
 
 /* Each object inside the navigation bar list */
 #navbar li{
-	/*float: left;*/
 	padding-right: 15px;
 	padding-bottom: 20px;
 	display: inline;
