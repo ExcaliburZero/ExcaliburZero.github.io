@@ -1,0 +1,13 @@
+language: ruby
+rvm:
+- 2.1
+script: htmlproof --check-favicon --verbose --check-html
+
+# branch whitelist
+branches:
+  only:
+  - master     # test the master branch
+
+env:
+  global:
+  - NOKOGIRI_USE_SYSTEM_LIBRARIES=true # speeds up installation of html-proofer
