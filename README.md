@@ -1,6 +1,8 @@
 #ExcaliburZero.github.io
-
 This is the GitHub repo for ExcaliburZero's website.
+
+##Build Status
+[![Build Status](https://travis-ci.org/ExcaliburZero/ExcaliburZero.github.io.png)](https://travis-ci.org/ExcaliburZero/ExcaliburZero.github.io)
 
 ##Website URL
 - http://excaliburzero.github.io/
