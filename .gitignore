@@ -1,28 +1,3 @@
-/images/Favicon (GIMP File)-2.xcf
-/images/Favicon (GIMP File).xcf
-/images/Icon - Codecademy (GIMP File).xcf
-/images/Icon - DevientART (GIMP File).xcf
-/images/Icon - GitHub (GIMP File).xcf
-/images/Icon - MineTest (GIMP File).xcf
-/images/Icon - MyAnimeList (GIMP File).xcf
-/images/Icon - Nintendo Wiki (GIMP File).xcf
-/images/Logo (GIMP File)-2.xcf
-/images/Logo (GIMP File).xcf
-/Images/Icon - MyAnimeList (GIMP File).xcf
-/Images/Logo (GIMP File)-2.xcf
-/.gitignore~
-/Images/Favicon (GIMP File).xcf
-/Images/Favicon (GIMP File)-2.xcf
-/contact.html~
-/README.md~
-/websites.html~
-/art.html~
-/Images/Icon - MineTest (GIMP File).xcf
-/Images/Icon - Codecademy (GIMP File).xcf
-/Images/Icon - Nintendo Wiki (GIMP File).xcf
-/Images/Icon - GitHub (GIMP File).xcf
-/Images/Icon - DevientART (GIMP File).xcf
-/style.css~
-/index.html~
-/Images/Logo (GIMP File).xcf
 /.project
+*.*~
+*.xcf
