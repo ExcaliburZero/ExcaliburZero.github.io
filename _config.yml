@@ -3,7 +3,7 @@ title: Christopher Randall Wells
 email: cwellsny@nycap.rr.com
 description: "My name is Christopher Randall Wells, and I am an aspiring computer programmer. I am a freshman at SUNY Oswego, and am pursuing a degree in Computer Science."
 baseurl: "" # the subpath of your site, e.g. /blog/
-url: "http://christopher-randall-wells.divshot.io" # the base hostname & protocol for your site
+url: "https://excaliburzero.github.io" # the base hostname & protocol for your site
 twitter_username: ExcaliburZero_Z
 github_username:  ExcaliburZero
 stackoverflowcareers_username: christopherrandallwells
