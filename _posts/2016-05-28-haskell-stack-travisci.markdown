@@ -22,7 +22,7 @@ The Travis CI configuration file needed to be able to do the following things in
 - Check to make sure that the package is valid
 - Send coverage reports on the unit tests of the package to Coveralls.io
 
-## Installation Step
+## Installation Steps
 In a Travis CI build config, the `before_install` and `install` steps are used to dependencies required for building and testing a project.
 
 Specifically, the `before_install` step is used for installing more general dependencies such as packages. While, the `install` step is used for installing things like libraries that the project depends on.
@@ -39,7 +39,7 @@ In the config file I put together, the first thing I do in the `before_install` 
 - travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
 ```
 
-After downloading Stack, you want to download the proper version of GHC, as well as any service programs. In this case I wanted to install `stack-hpc-coveralls in order to handle sending test coverage reports to Coveralls.io.`
+After downloading Stack, you want to download the proper version of GHC, as well as any service programs. In this case I wanted to install `stack-hpc-coveralls` in order to handle sending test coverage reports to Coveralls.io.`
 
 Downloading the proper version of GHC is handled by Stack's `setup` subcommand, so you just need to run that. In this case I run it and any other Stack commands with the `--no-terminal` flag in order to make the output easier to read in Travis CI's build logs. After that, stack-hpc-coveralls can be installed through Stack as well.
 
@@ -47,6 +47,17 @@ Downloading the proper version of GHC is handled by Stack's `setup` subcommand, 
 # Setup Stack and install dependencies for tools
 - stack setup --no-terminal
 - stack install stack-hpc-coveralls --no-terminal
+```
+
+### install
+In the `install` step, normally the project dependencies would be installed. However, I am not sure how this can be done with Stack. In Cabal you can do this by running `cabal install --only-dependencies`, but I have been unable to find out the equivalent command in Stack. Instead, the project dependencies can be automatically installed durring the build process.
+
+By defualt, Travis CI runs the following command durring the install step: `cabal install --only-dependencies --enable-tests`. However, since we are using Stack we do not want it to run that command. Thus we need to override the default `install` step. This can be done by giving a simple echo command in the install step, which doesn't do anything important other than overriding the default step.
+
+```
+install:
+  # Overwrite the default installation command used by Travis CI
+  - echo "Dependencies are installed by Stack in the build process."
 ```
 
 ## Chaching
