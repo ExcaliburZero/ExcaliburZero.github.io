@@ -39,7 +39,17 @@ In the config file I put together, the first thing I do in the `before_install` 
 - travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
 ```
 
-After downloading Stack, you want to download the proper version of GHC, as well as any service programs.
+After downloading Stack, you want to download the proper version of GHC, as well as any service programs. In this case I wanted to install `stack-hpc-coveralls in order to handle sending test coverage reports to Coveralls.io.`
+
+Downloading the proper version of GHC is handled by Stack's `setup` subcommand, so you just need to run that. In this case I run it and any other Stack commands with the `--no-terminal` flag in order to make the output easier to read in Travis CI's build logs. After that, stack-hpc-coveralls can be installed through Stack as well.
+
+```
+# Setup Stack and install dependencies for tools
+- stack setup --no-terminal
+- stack install stack-hpc-coveralls --no-terminal
+```
+
+## Chaching
 
 ## The Code
 Here is the final resulting Travis CI configuration file I ended up putting together:
