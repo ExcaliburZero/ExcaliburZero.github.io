@@ -50,14 +50,14 @@ Downloading the proper version of GHC is handled by Stack's `setup` subcommand, 
 ```
 
 ### install
-In the `install` step, normally the project dependencies would be installed. However, I am not sure how this can be done with Stack. In Cabal you can do this by running `cabal install --only-dependencies`, but I have been unable to find out the equivalent command in Stack. Instead, the project dependencies can be automatically installed durring the build process.
+In the `install` step, the dependencies for the project should be installed. While Stack automatically installed the needed dependencies when building theproject, when working with Travis CI it is better to install them beforehand. Specifically, this allows Travis CI totell the difference between [a build erroring due to failed dependency installation](https://docs.travis-ci.com/user/customizing-the-build/#Breaking-the-Build) and a build failure due tothe project throing errors.
 
-By defualt, Travis CI [runs the following command durring the install step](https://docs.travis-ci.com/user/languages/haskell#Travis-CI-uses-cabal): `cabal install --only-dependencies --enable-tests`. However, since we are using Stack we do not want it to run that command. Thus we need to override the default `install` step. This can be done by giving a simple echo command in the install step, which doesn't do anything important other than overriding the default step.
+To install
 
 ```
 install:
-  # Overwrite the default installation command used by Travis CI
-  - echo "Dependencies are installed by Stack in the build process."
+  # Install the program's dependencies
+  - stack install --only-dependencies --no-terminal
 ```
 
 ## Chaching
