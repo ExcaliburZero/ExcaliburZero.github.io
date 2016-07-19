@@ -10,7 +10,7 @@ icon: icon-credit_card
 </div>
 
 {::options parse_block_html="true" /}
-My name is Christopher Randall Wells, and I am an aspiring computer programmer. I am a freshman at [SUNY Oswego](http://www.oswego.edu/), and am pursuing a degree in Computer Science.
+My name is Christopher Wells, and I am an aspiring computer programmer. I am a student at [SUNY Oswego](http://www.oswego.edu/), and am pursuing a degree in Computer Science.
 
 ## Background
 I first started learning computer programming through an online summer course on Java that I took at [Hudson Valley Community College](https://www.hvcc.edu/), and unfortunately I didn't take too well to learning Java at first. However, about a year or so later I started teaching myself Python through [Codeacademy](https://www.codecademy.com), and had quite a bit of fun doing so.
