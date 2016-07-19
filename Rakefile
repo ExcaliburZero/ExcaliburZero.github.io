@@ -1,16 +1,10 @@
 # encoding: utf-8
 
-require "html/proofer"
-
 task :default => [:test]
 
+require 'html-proofer'
+
 task :test do
-	HTML::Proofer.new("_site/", {
-		:href_ignore => [
-			"#",
-		],
-		:verbose => true,
-		:check_favicon => true,
-		#:check_html => true,
-	}).run
+  sh "bundle exec jekyll build"
+  sh "bundle exec htmlproofer '_site/' --allow-hash-href"
 end

@@ -14,10 +14,11 @@ layout: default
         <h2 class="main-page-post-title">
           <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
         </h2>
-        <div class="post-categories">
+        <!--<div class="post-categories">
             <i class="icon-label"></i>
             <ul class="main-page-category-list">{{ post.categories | category_links }}</ul>
         </div>
+	-->
         <div class="main-page-post-image-box">
             <a href="{{ post.url | prepend: site.baseurl }}"><img class="post-image" src="{{ post.image }}" alt="{{ post.title }}" /></a>
         </div>
