@@ -43,7 +43,23 @@ colorFromSeed = genColor . dSum . unSeed
 ~~~
 
 ## Pattern Generation
-Once I had handled color generation for avatars, I decided to move on to generating the pattern for the avatar images.
+Once I had handled color generation for avatars, I decided to move on to generating the pattern for the avatar images. I decided to try to achive a simmilar type of pattern to that used by GitHub in its default avatars.
+
+![An example of a default GitHub avatar]({{ site.baseurl }}/images/avatar_github.png)
+
+The type of pattern used in default GitHub avatars starts with a 3x5px pattern which is then reflected over the y axis, such that it overlaps in the middle, resulting in a 5x5px pattern.[^github-pattern]
+
+Instead of using a 5x5px pattern, I decided to try creating an 8x8px pattern. I figured that I could create the pattern by generating a 4x4px pattern and then relfecting it over the y-axis without overlap.
+
+I thought that I would be able to create the 4x8px pattern by creating a list of 32 binary values and then converting that into a grid. I noticed that the seed values, being md5 hashes, were 32 digits in length, so I figured that I could just round them each up or down to a False or True value around 7, and then use those boolean values to represent colored and uncolored pixels in the pattern.[^md5-coincidence] [^map-map]
+
+~~~ haskell
+numToGrid :: String -> [[Bool]]
+numToGrid s = grid
+  where grid = (map . map) convertToPixel $ (map . map) ord numGrid
+        numGrid = chunksOf 4 s
+        convertToPixel = (> ord '7')
+~~~
 
 ## Footnotes
 [^color-stats]: To see how often specific colors were chosen I mapped the color choosing function over a list of String versions of all of the numbers 1 to a high number such as 10000, and took the length of the list after filtering it down to just the deisred color. This is one case where ghci really comes in handy.
@@ -51,3 +67,9 @@ Once I had handled color generation for avatars, I decided to move on to generat
 [^color]: Actually I only relaized that this was the cause of the issue when I re-read [the code for the function](https://github.com/ExcaliburZero/pixelated-avatar-generator/blob/bebf6d81b91680bccc4ce7db3e7d739261573282/src/Graphics/Avatars/Pixelated.hs#L31-L43) when I was writing this article. I suppose that's what I get for writing code at 3 AM.
 
 [^color-alg-2]: Originally I tried taking the product of the ord values, however that did not result in a very good color distribution. So I tried summing them instead, and that yielded a good distribution.
+
+[^github-pattern]: I only really looked at the GitHub avatar pattern in this detail after I had designed the pattern generation algorithm I would use. Before then I had only really taken note that the avatars were symmetrical on the y-axis. If figured that by not analyzing the patterns too much, I would be able to be more creative in the design of the pattern generation algorithm I would create.
+
+[^md5-coincidence]: The fact that the two both happened to be in amounts of 32 was actually entirely by coincidence. I kind of just lucked out there.
+
+[^map-map]: This is also when I learned that you could map a function over a two dimensional list by just composing `map` with its self. That's actually kind of cool.
