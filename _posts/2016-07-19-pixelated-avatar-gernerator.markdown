@@ -28,7 +28,7 @@ Since the md5 hash function can take in a String of a given length and return a 
 ## Color Generation
 For the avatar images, I decided that each avatar would have a given color from some given set of possible colors. At first I figured that I could make use of the fact that each of the digits in the seed values was hexidecimal, so I decided to have 8 different possible colors.
 
-In order to generate the color I decided to take the first two digits of the seed, average them into one hexidecimal digit, and have each color correspond to two of the possible resulting digits. However, after using ghci to generate a bunch of colors from a list of seeds I found that the statistical distribution of the colors chosen tended to be heavily focused on one specific color. Almost half of the seeds I fould feed into the color choosing function I had writen would yield orange.[^color-stats]
+In order to generate the color I decided to take the first two digits of the seed, average them into one hexidecimal digit, and have each color correspond to two of the possible resulting digits. However, after using ghci to generate a bunch of colors from a list of seeds I found that the statistical distribution of the colors chosen tended to be heavily focused on one specific color. Almost half of the seeds I would feed into the color choosing function I had writen would yield orange.[^color-stats]
 
 I only later realized that the issue was caused by an incorrect averaging of the hexidecimal digits, as averaged the values returned using `ord` from `Data.Char` and mapped them to the returned values of `ord` on the hexidecimal digits. The values of `ord '9'` and `ord 'a'` are not next to each other.[^color]
 
@@ -61,6 +61,22 @@ numToGrid s = grid
         convertToPixel = (> ord '7')
 ~~~
 
+Once I could generate the 4x8px half of the pattern, the full pattern could be easily created by just relfecting it over the y-axis. This could be done by mapping a function over the first dimension of the list which would return the contained list concatenated with the reverse of its self.
+
+For testing purposes, I also added a show instance to the AvatarGrid type I used to represent the pattern. The show function would return a visual representation of the pattern using the [full block Unicode symbol](http://www.fileformat.info/info/unicode/char/2588/index.htm). That way it would be easier to tell what the pattern would look like, even before I had implemented the actual image generation.[^pattern-show]
+
+~~~
+>>> (generateAvatarGrid . createSeed) "Hello"
+██ ██ ██
+██    ██
+█      █
+  █  █  
+██    ██
+████████
+█  ██  █
+  █  █  
+~~~
+
 ## Footnotes
 [^color-stats]: To see how often specific colors were chosen I mapped the color choosing function over a list of String versions of all of the numbers 1 to a high number such as 10000, and took the length of the list after filtering it down to just the deisred color. This is one case where ghci really came in handy.
 
@@ -75,3 +91,5 @@ numToGrid s = grid
 [^md5-coincidence]: The fact that the two both happened to be in amounts of 32 was actually entirely by coincidence. I kind of just lucked out there.
 
 [^map-map]: This is also when I first learned that you could map a function over a two dimensional list by just composing `map` with its self. That's actually kind of cool.
+
+[^pattern-show]: When I first implemented the show instance, I used the @ symbol to represent the pattern. However, I found that by using a block symbol instead, I would be able to get a better representation of the pattern. Though, the symbol does sometimes cause [visual issues on some applications](https://coveralls.io/builds/7071873/source?filename=src%2FGraphics%2FAvatars%2FPixelated.hs#L267).
