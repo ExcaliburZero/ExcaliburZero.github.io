@@ -61,7 +61,7 @@ numToGrid s = grid
         convertToPixel = (> ord '7')
 ~~~
 
-Once I could generate the 4x8px half of the pattern, the full pattern could be easily created by just relfecting it over the y-axis. This could be done by mapping a function over the first dimension of the list which would return the contained list concatenated with the reverse of its self.
+Once I could generate the 4x8px half of the pattern, the full pattern could be easily created by just relfecting it over the y-axis. This could be done by mapping a function over the first dimension of the list which would return the contained list concatenated with the reverse of its self.[^pattern-expose]
 
 For testing purposes, I also added a show instance to the AvatarGrid type I used to represent the pattern. The show function would return a visual representation of the pattern using the [full block Unicode symbol](http://www.fileformat.info/info/unicode/char/2588/index.htm). That way it would be easier to tell what the pattern would look like, even before I had implemented the actual image generation.[^pattern-show]
 
@@ -77,6 +77,11 @@ For testing purposes, I also added a show instance to the AvatarGrid type I used
   █  █  
 ~~~
 
+Once I had implemented the generation of both avatar colors and patterns from a seed value, I was able to just combine the two into an Avatar datatype. Then I could just create a function which would generate a whole Avatar instance from a given seed value.
+
+## Image Generation
+After I finished implementing the generation of avatars, I needed to work on coverting avatars into images.
+
 ## Footnotes
 [^color-stats]: To see how often specific colors were chosen I mapped the color choosing function over a list of String versions of all of the numbers 1 to a high number such as 10000, and took the length of the list after filtering it down to just the deisred color. This is one case where ghci really came in handy.
 
@@ -91,5 +96,7 @@ For testing purposes, I also added a show instance to the AvatarGrid type I used
 [^md5-coincidence]: The fact that the two both happened to be in amounts of 32 was actually entirely by coincidence. I kind of just lucked out there.
 
 [^map-map]: This is also when I first learned that you could map a function over a two dimensional list by just composing `map` with its self. That's actually kind of cool.
+
+[^pattern-expose]: While I ended up setting up the library such that one would call a function to generate both the avatar colorand pattern at the same time, and not need to directly call the pattern generating function `generateAvatarGrid`, I did leave that function exposed. I figured that someone might have some usecase for generating just the pattern. However, I did not expose the underlying functions used for generating the pattern as they were fairly usecase specific.
 
 [^pattern-show]: When I first implemented the show instance, I used the @ symbol to represent the pattern. However, I found that by using a block symbol instead, I would be able to get a better representation of the pattern. Though, the symbol does sometimes cause [visual issues on some applications](https://coveralls.io/builds/7071873/source?filename=src%2FGraphics%2FAvatars%2FPixelated.hs#L267).
