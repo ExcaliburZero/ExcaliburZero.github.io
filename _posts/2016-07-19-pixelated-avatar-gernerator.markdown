@@ -25,4 +25,29 @@ Since the md5 hash function can take in a String of a given length and return a 
 "8b1a9953c4611296a827abf8c47804d7"
 ~~~
 
-##
+## Color Generation
+For the avatar images, I decided that each avatar would have a given color from some given set of possible colors. At first I figured that I could make use of the fact that each of the digits in the seed values was hexidecimal, so I decided to have 8 different possible colors.
+
+In order to generate the color I decided to take the first two digits of the seed, average them into one hexidecimal digit, and have each color correspond to two of the possible resulting digits. However, after using ghci to generate a bunch of colors from a list of seeds I found that the statistical distribution of the colors chosen tended to be heavily focused on one specific color. Almost half of the seeds I fould feed into the color choosing function I had writen would yield orange.[^color-stats]
+
+I only later realized that the issue was caused by an incorrect averaging of the hexidecimal digits, as averaged the values returned using `ord` from `Data.Char` and mapped them to the returned values of `ord` on the hexidecimal digits. The values of `ord '9'` and `ord 'a'` are not next to each other.[^color]
+
+Once I noticed the issue with the uneven distribution of colors I decided to come up with a new alorithm for the color choosing function. The algorithm I ended upcoming up with was to take the first two characters of the seed value, sum their `ord` values, and take the modulus 8 of the resulting number and map the resulting digit 0-7 to a color.[^color-alg-2]
+
+~~~ haskell
+colorFromSeed :: Seed -> Color
+colorFromSeed = genColor . dSum . unSeed
+  where twoDigits n = map ord $ take 2 n
+        dSum n = foldr (+) 1 $ twoDigits n
+        genColor a = [Black .. Yellow] !! (a `mod` 8)
+~~~
+
+## Pattern Generation
+Once I had handled color generation for avatars, I decided to move on to generating the pattern for the avatar images.
+
+## Footnotes
+[^color-stats]: To see how often specific colors were chosen I mapped the color choosing function over a list of String versions of all of the numbers 1 to a high number such as 10000, and took the length of the list after filtering it down to just the deisred color. This is one case where ghci really comes in handy.
+
+[^color]: Actually I only relaized that this was the cause of the issue when I re-read [the code for the function](https://github.com/ExcaliburZero/pixelated-avatar-generator/blob/bebf6d81b91680bccc4ce7db3e7d739261573282/src/Graphics/Avatars/Pixelated.hs#L31-L43) when I was writing this article. I suppose that's what I get for writing code at 3 AM.
+
+[^color-alg-2]: Originally I tried taking the product of the ord values, however that did not result in a very good color distribution. So I tried summing them instead, and that yielded a good distribution.
