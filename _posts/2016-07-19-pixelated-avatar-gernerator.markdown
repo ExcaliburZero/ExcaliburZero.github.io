@@ -43,7 +43,7 @@ colorFromSeed = genColor . dSum . unSeed
 ~~~
 
 ## Pattern Generation
-Once I had handled color generation for avatars, I decided to move on to generating the pattern for the avatar images. I decided to try to achive a simmilar type of pattern to that used by GitHub in its default avatars.
+Once I had handled color generation for avatars, I decided to move on to generating the pattern for the avatar images. I decided to try to achive a simmilar type of pattern to that used by GitHub in its default avatars.[^pattern-type]
 
 ![An example of a default GitHub avatar]({{ site.baseurl }}/images/avatar_github.png)
 
@@ -62,14 +62,16 @@ numToGrid s = grid
 ~~~
 
 ## Footnotes
-[^color-stats]: To see how often specific colors were chosen I mapped the color choosing function over a list of String versions of all of the numbers 1 to a high number such as 10000, and took the length of the list after filtering it down to just the deisred color. This is one case where ghci really comes in handy.
+[^color-stats]: To see how often specific colors were chosen I mapped the color choosing function over a list of String versions of all of the numbers 1 to a high number such as 10000, and took the length of the list after filtering it down to just the deisred color. This is one case where ghci really came in handy.
 
 [^color]: Actually I only relaized that this was the cause of the issue when I re-read [the code for the function](https://github.com/ExcaliburZero/pixelated-avatar-generator/blob/bebf6d81b91680bccc4ce7db3e7d739261573282/src/Graphics/Avatars/Pixelated.hs#L31-L43) when I was writing this article. I suppose that's what I get for writing code at 3 AM.
 
 [^color-alg-2]: Originally I tried taking the product of the ord values, however that did not result in a very good color distribution. So I tried summing them instead, and that yielded a good distribution.
 
+[^pattern-type]: I decided to go with a pixelated pattern like the one used by GitHub as opposed to the more geometric patterns used by websites like Techdirt as I thought it would be much easier to implement. That way I would be able to just create the pattern as a two dimensional list and convert it directly into an image.
+
 [^github-pattern]: I only really looked at the GitHub avatar pattern in this detail after I had designed the pattern generation algorithm I would use. Before then I had only really taken note that the avatars were symmetrical on the y-axis. If figured that by not analyzing the patterns too much, I would be able to be more creative in the design of the pattern generation algorithm I would create.
 
 [^md5-coincidence]: The fact that the two both happened to be in amounts of 32 was actually entirely by coincidence. I kind of just lucked out there.
 
-[^map-map]: This is also when I learned that you could map a function over a two dimensional list by just composing `map` with its self. That's actually kind of cool.
+[^map-map]: This is also when I first learned that you could map a function over a two dimensional list by just composing `map` with its self. That's actually kind of cool.
