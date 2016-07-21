@@ -81,7 +81,7 @@ Once I had implemented the generation of both avatar colors and patterns from a 
 
 Since the avatar patterns start at a size of 8x8px, any image created directly from them would be quite small. In order to increase the size of avatar images I figured that I could write a function which would upscale the size of an avatar by a given scaling factor.
 
-In order to upscale avatar patterns I would need to use a function whichwould be able to take a given list and scaleit up by a given integer factor. Unfortunately, I was unable to find such a function, so I implemented it and exported it as a utility function.[^scale-list]
+In order to upscale avatar patterns I would need to use a function which would be able to take a given list and scale it up by a given integer factor. Unfortunately, I was unable to find such a function, so I implemented it and exported it as a utility function.[^scale-list]
 
 ~~~
 >>> scaleList 3 [0, 1]
@@ -114,13 +114,13 @@ Then all that was needed by the function was the dimensions of the avatar image.
 ## Image Encoding
 Once I had implemented converting avatars into images, I needed to implement the encoding of avatar images into bytestrings of common image formats, such as PNG and GIF.
 
-At first I decided to prioritise working on getting PNG encoding working first, as that is the main format I designed the library in mind with. Luckily, JuciyPixels comes with a simple function that converts an image into a lazy bytestring.
+At first I decided to prioritize working on getting PNG encoding working first, as that is the main format I designed the library in mind with. Luckily, JuciyPixels comes with a simple function that converts an image into a lazy bytestring.
 
 ~~~ haskell
 encodePng :: Image a -> ByteString
 ~~~
 
-From there, I started working on a function which would take in an avatar and a filepath, convert the avatar into a PNG image bytestring, and save the image bytestring to the given filepath. This was mostly straightforeward, as it mainly involved calling existing functions and passing values around.
+From there, I started working on a function which would take in an avatar and a filepath, convert the avatar into a PNG image bytestring, and save the image bytestring to the given filepath. This was mostly straightforward, as it mainly involved calling existing functions and passing values around.
 
 However, once I had implemented saving of avatar images in one format, I decided to try to add support for other image formats as well.
 
@@ -132,7 +132,7 @@ saveAvatarWith :: ImageConversion -> Avatar -> FilePath -> IO ()
 
 However, I soon found that adding support for other formats would be a little bit more difficult than I originally expected. After looking over the documentation for JuicyPixels I found that the encoding process for several other image formats were a bit more complicated than the process for PNG.
 
-For example, to encode an image using the GIF format, you would either need to just work with greyscale images or supply a color pallete for the image.[^image-formats]
+For example, to encode an image using the GIF format, you would either need to just work with greyscale images or supply a color palette for the image.[^image-formats]
 
 ~~~ haskell
 encodeGifImageWithPalette :: Image Pixel8 -> Palette -> Either String ByteString
@@ -165,4 +165,4 @@ Luckily, however, I was able to eventually find a function `encodeColorReducedGi
 
 [^image-formats]: I was mainly focused on trying to add support for PNG, GIF, and JPEG, as those tend to be the three more commonly used image formats for online images. As of yet, however, I have not added support for JPEG image encoding.
 
-[^gif-encode]: Actually `encodeColorReducedGifImage` returns a `Either String ByteString` rather than just a `ByteString`. I'mactually unsure exactly why it returns an Either rather than just a bytestring. I think this isdue to its use of `encodeGifImageWithPalette` which can "return errors if the palette is ill-formed". However, if it is generating the correctly formed (non-Either) pallete then there should be no reason that the call to `encodeGifImageWithPalette` should return a Left. To solve this difference in the encoding function I just wrapped the result of the function in [a case statement pulling out the Right value](https://github.com/ExcaliburZero/pixelated-avatar-generator/blob/master/src/Graphics/Avatars/Pixelated.hs#L186-L189). I sure hope that it doesn't ever yeild a Left.
+[^gif-encode]: Actually `encodeColorReducedGifImage` returns a `Either String ByteString` rather than just a `ByteString`. I'm actually unsure exactly why it returns an Either rather than just a bytestring. I think this is due to its use of `encodeGifImageWithPalette` which can "return errors if the palette is ill-formed". However, if it is generating the correctly formed (non-Either) pallete then there should be no reason that the call to `encodeGifImageWithPalette` should return a Left. To solve this difference in the encoding function I just wrapped the result of the function in [a case statement pulling out the Right value](https://github.com/ExcaliburZero/pixelated-avatar-generator/blob/master/src/Graphics/Avatars/Pixelated.hs#L186-L189). I sure hope that it doesn't ever yield a Left.
