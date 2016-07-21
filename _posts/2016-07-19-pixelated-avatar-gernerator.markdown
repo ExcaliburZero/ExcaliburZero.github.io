@@ -7,9 +7,9 @@ image: "/images/developing_haskell_library.png"
 date:   2016-07-19 09:10:00
 categories: haskell library avatars
 ---
-Recently I have been working on getting better at writing code in Haskell, and in doing so I have worked on a few different small libraries and applications. One of the more interesting libraries that I have written in this attempt is Pixelated Avatar Generator.
+Recently I have been working on getting better at writing code in Haskell, and in doing so I have worked on a few different small libraries and applications. One of the more interesting libraries that I have written in this attempt is [Pixelated Avatar Generator](https://hackage.haskell.org/package/pixelated-avatar-generator).
 
-Pixelated Avatar Generator is a Haskell library that I have been working on, which provides functions for generating and saving pixelated avatars for default user avatars for websites, like the ones used by GitHub and Techdirt.
+Pixelated Avatar Generator is a Haskell library that I have been working on, which provides functions for generating and saving pixelated avatars to serve as default user avatars for websites, similar to the ones used by GitHub and Techdirt.
 
 ## Starting
 To create the initial setup of the library, I used a [custom Stack project template](https://github.com/ExcaliburZero/custom-stack-templates/blob/master/cwells.hsfiles) I put together which includes hspec testing, Travis CI automated testing, and Coveralls.io coverage reports.
@@ -127,6 +127,8 @@ However, once I had implemented saving of avatar images in one format, I decided
 Since the function signature of `encodePng` is fairly general, I figured that I could create a new function `saveAvatarWith` which would allow an image encoding function to be passed in rather than using PNG encoding. I could also provide several common image encoding functions to be used with it.
 
 ~~~ haskell
+type ImageConversion = (Image PixelRGB8 -> ByteString)
+
 saveAvatarWith :: ImageConversion -> Avatar -> FilePath -> IO ()
 ~~~
 
