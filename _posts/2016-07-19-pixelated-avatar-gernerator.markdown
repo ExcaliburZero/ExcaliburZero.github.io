@@ -79,6 +79,17 @@ For testing purposes, I also added a show instance to the AvatarGrid type I used
 
 Once I had implemented the generation of both avatar colors and patterns from a seed value, I was able to just combine the two into an Avatar datatype. Then I could just create a function which would generate a whole Avatar instance from a given seed value.
 
+Since the avatar patterns start at a size of 8x8px, any image created directly from them would be quite small. In order to increase the size of avatar images I figured that I could write a function which would upscale the size of an avatar by a given scaling factor.
+
+In order to upscale avatar patterns I would need to use a function whichwould be able to take a given list and scaleit up by a given integer factor. Unfortunately, I was unable to find such a function, so I implemented it and exported it as a utility function.[^scale-list]
+
+~~~
+>>> scaleList 3 [0, 1]
+[0,0,0,1,1,1]
+~~~
+
+By making a `scaleAvatar` function available, avatars could easily be scaled up to sizes of powers of two, such as 128x128px and 256x256px.
+
 ## Image Generation
 Since I finished implementing the generation of avatars, I next needed to work on converting avatars into images. After doing some searching on Hackage for libraries for working with images, I found [JuicyPixels](https://hackage.haskell.org/package/JuicyPixels).
 
@@ -100,6 +111,19 @@ getPixel x y = colorGrid !! y !! x
 
 Then all that was needed by the function was the dimensions of the avatar image. Since all avatar images are all square, the dimensions would both be the same, and could be gotten by taking the length of the two dimensional list of pixels.[^avatar-dimensions]
 
+## Image Encoding
+Once I had implemented converting avatars into images, I needed to implement the encoding of avatar images into bytestrings of common image formats, such as PNG and GIF.
+
+At first I decided to prioritise working on getting PNG encoding working first, as that is the main format I designed the library in mind with. Luckily, JuciyPixels comes with a simple function that converts an image into a lazy bytestring.
+
+~~~ haskell
+encodePng :: Image a -> ByteString
+~~~
+
+From there, I started working on a function which would take in an avatar and a filepath, convert the avatar into a PNG image bytestring, and save the image bytestring to the given filepath. This was mostly straightforeward, as it mainly involved calling existing functions and passing values around.
+
+However, once I had implemented saving of avatar images in one format, I decided to try to add support for other image formats as well.
+
 ## Footnotes
 [^color-stats]: To see how often specific colors were chosen I mapped the color choosing function over a list of String versions of all of the numbers 1 to a high number such as 10000, and took the length of the list after filtering it down to just the desired color. This is one case where ghci really came in handy.
 
@@ -118,5 +142,7 @@ Then all that was needed by the function was the dimensions of the avatar image.
 [^pattern-expose]: While I ended up setting up the library such that one would call a function to generate both the avatar color and pattern at the same time, and not need to directly call the pattern generating function `generateAvatarGrid`, I did leave that function exposed. I figured that someone might have some use-case for generating just the pattern. However, I did not expose the underlying functions used for generating the pattern as they were fairly use-case specific.
 
 [^pattern-show]: When I first implemented the show instance, I used the @ symbol to represent the pattern. However, I found that by using a block symbol instead, I would be able to get a better representation of the pattern. Though, the symbol does sometimes cause [visual issues on some applications](https://coveralls.io/builds/7071873/source?filename=src%2FGraphics%2FAvatars%2FPixelated.hs#L267).
+
+[^scale-list]: I thought that `Data.List` would likely have a function for scaling lists up by a given factor since it seemed like a common list operation, however, unfortunately it does not have any such function from what I can tell.
 
 [^avatar-dimensions]: Currently the `convertAvatarToImage` function does not have proper handling for cases in which a non-square avatar is passed into it. I realized this when writing this article and quickly filed an [issue](https://github.com/ExcaliburZero/pixelated-avatar-generator/issues/15) for it. This shouldn't happen if just the avatar generation functions of the library are used, but similar functions created by users of the library could yield avatars that not specifically squares.
