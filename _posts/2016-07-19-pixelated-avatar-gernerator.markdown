@@ -80,7 +80,19 @@ For testing purposes, I also added a show instance to the AvatarGrid type I used
 Once I had implemented the generation of both avatar colors and patterns from a seed value, I was able to just combine the two into an Avatar datatype. Then I could just create a function which would generate a whole Avatar instance from a given seed value.
 
 ## Image Generation
-After I finished implementing the generation of avatars, I needed to work on coverting avatars into images.
+Since I finished implementing the generation of avatars, I next needed to work on coverting avatars into images. After doing some searching on Hackage for libraries for working with images, I found [JuicyPixels](https://hackage.haskell.org/package/JuicyPixels).
+
+JuicyPixels is a Haskell library which allows you to create and encode images. Most importantly it allows you to be able to be able to create an image by defining a function for getting each pixel of the image and supplying the dimensions of the image.
+
+~~~ haskell
+generateImage :: Pixel px => (Int -> Int -> px) -> Int -> Int -> Image px
+~~~
+
+In order to convert the avatar pattern into an image, first I needed to convert the two dimensional list of booleans representing the pattern into a two dimensional list of pixels. To be able to do that I would first need to create a function to convert a boolean value and a color into a pixel, and then I could map that over the two dimensional list of booleans to create the desired two dimensional list of pixels.
+
+Since the coloring scheme of the avatar images would consist of colored "True" pixels and white "False" pixels, creating the boolean to pixel conversion function was fairly simple. I would just have it return a white pixel if the boolean is False, and return the pixel color correpsonding to the given color if the boolean is True.
+
+Once a two dimensional list of pixels could be created, I then needed to turn it into the
 
 ## Footnotes
 [^color-stats]: To see how often specific colors were chosen I mapped the color choosing function over a list of String versions of all of the numbers 1 to a high number such as 10000, and took the length of the list after filtering it down to just the deisred color. This is one case where ghci really came in handy.
