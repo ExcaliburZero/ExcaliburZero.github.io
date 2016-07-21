@@ -124,6 +124,22 @@ From there, I started working on a function which would take in an avatar and a 
 
 However, once I had implemented saving of avatar images in one format, I decided to try to add support for other image formats as well.
 
+Since the function signature of `encodePng` is fairly general, I figured that I could create a new function `saveAvatarWith` which would allow an image encoding function to be passed in rather than using PNG encoding. I could also provide several common image encoding functions to be used with it.
+
+~~~ haskell
+saveAvatarWith :: ImageConversion -> Avatar -> FilePath -> IO ()
+~~~
+
+However, I soon found that adding support for other formats would be a little bit more difficult than I originally expected. After looking over the documentation for JuicyPixels I found that the encoding process for several other image formats were a bit more complicated than the process for PNG.
+
+For example, to encode an image using the GIF format, you would either need to just work with greyscale images or supply a color pallete for the image.[^image-formats]
+
+~~~ haskell
+encodeGifImageWithPalette :: Image Pixel8 -> Palette -> Either String ByteString
+~~~
+
+Luckily, however, I was able to eventually find a function `encodeColorReducedGifImage` which would encode RGB images into the GIF format by handling the generation of the color pallete.[^gif-encode]
+
 ## Footnotes
 [^color-stats]: To see how often specific colors were chosen I mapped the color choosing function over a list of String versions of all of the numbers 1 to a high number such as 10000, and took the length of the list after filtering it down to just the desired color. This is one case where ghci really came in handy.
 
@@ -146,3 +162,7 @@ However, once I had implemented saving of avatar images in one format, I decided
 [^scale-list]: I thought that `Data.List` would likely have a function for scaling lists up by a given factor since it seemed like a common list operation, however, unfortunately it does not have any such function from what I can tell.
 
 [^avatar-dimensions]: Currently the `convertAvatarToImage` function does not have proper handling for cases in which a non-square avatar is passed into it. I realized this when writing this article and quickly filed an [issue](https://github.com/ExcaliburZero/pixelated-avatar-generator/issues/15) for it. This shouldn't happen if just the avatar generation functions of the library are used, but similar functions created by users of the library could yield avatars that not specifically squares.
+
+[^image-formats]: I was mainly focused on trying to add support for PNG, GIF, and JPEG, as those tend to be the three more commonly used image formats for online images. As of yet, however, I have not added support for JPEG image encoding.
+
+[^gif-encode]: Actually `encodeColorReducedGifImage` returns a `Either String ByteString` rather than just a `ByteString`. I'mactually unsure exactly why it returns an Either rather than just a bytestring. I think this isdue to its use of `encodeGifImageWithPalette` which can "return errors if the palette is ill-formed". However, if it is generating the correctly formed (non-Either) pallete then there should be no reason that the call to `encodeGifImageWithPalette` should return a Left. To solve this difference in the encoding function I just wrapped the result of the function in [a case statement pulling out the Right value](https://github.com/ExcaliburZero/pixelated-avatar-generator/blob/master/src/Graphics/Avatars/Pixelated.hs#L186-L189). I sure hope that it doesn't ever yeild a Left.
