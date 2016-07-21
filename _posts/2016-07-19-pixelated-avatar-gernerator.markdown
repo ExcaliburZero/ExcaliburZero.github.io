@@ -90,9 +90,15 @@ generateImage :: Pixel px => (Int -> Int -> px) -> Int -> Int -> Image px
 
 In order to convert the avatar pattern into an image, first I needed to convert the two dimensional list of booleans representing the pattern into a two dimensional list of pixels. To be able to do that I would first need to create a function to convert a boolean value and a color into a pixel, and then I could map that over the two dimensional list of booleans to create the desired two dimensional list of pixels.
 
-Since the coloring scheme of the avatar images would consist of colored "True" pixels and white "False" pixels, creating the boolean to pixel conversion function was fairly simple. I would just have it return a white pixel if the boolean is False, and return the pixel color correpsonding to the given color if the boolean is True.
+Since the coloring scheme of the avatar images would consist of colored "True" pixels and white "False" pixels, creating the boolean to pixel conversion function was fairly simple. I would just have it return a white pixel if the boolean is False, and return the pixel color correpsonding to the avatar color if the boolean is True.
 
-Once a two dimensional list of pixels could be created, I then needed to turn it into the
+Once a two dimensional list of pixels could be created, I then needed to turn it into the pixel accessing function required bythe `generateImage` function. This was actually fairly simple, and could be accomplished by just returning the correct pixel by using `!!` with both the row and column.
+
+~~~ haskell
+getPixel x y = colorGrid !! y !! x
+~~~
+
+Then all that was needed by the function was the dimensions of the avatar image. Since all avatar images are all square, the dimensions would both be the same, and could be gotten by taking the length of the two dimensional list of pixels.[^avatar-dimensions]
 
 ## Footnotes
 [^color-stats]: To see how often specific colors were chosen I mapped the color choosing function over a list of String versions of all of the numbers 1 to a high number such as 10000, and took the length of the list after filtering it down to just the deisred color. This is one case where ghci really came in handy.
@@ -112,3 +118,5 @@ Once a two dimensional list of pixels could be created, I then needed to turn it
 [^pattern-expose]: While I ended up setting up the library such that one would call a function to generate both the avatar colorand pattern at the same time, and not need to directly call the pattern generating function `generateAvatarGrid`, I did leave that function exposed. I figured that someone might have some usecase for generating just the pattern. However, I did not expose the underlying functions used for generating the pattern as they were fairly usecase specific.
 
 [^pattern-show]: When I first implemented the show instance, I used the @ symbol to represent the pattern. However, I found that by using a block symbol instead, I would be able to get a better representation of the pattern. Though, the symbol does sometimes cause [visual issues on some applications](https://coveralls.io/builds/7071873/source?filename=src%2FGraphics%2FAvatars%2FPixelated.hs#L267).
+
+[^avatar-dimensions]: Currently the `convertAvatarToImage` function does not have proper handling for cases in which a non-square avatar is passed into it. I realized this when writing this article and quickly filed an [issue](https://github.com/ExcaliburZero/pixelated-avatar-generator/issues/15) for it. This shouldn't happen if just the avatar generation functions of the library are used, but simmilar functions created by users of the library could yield avatars that not specifically squares.
