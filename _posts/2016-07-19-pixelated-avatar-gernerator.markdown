@@ -146,7 +146,7 @@ Luckily, however, I was able to eventually find a function `encodeColorReducedGi
 Once I had gotten the main functionality of the library working, I decided to make a simple executable
 
 ## Testing
-To handle testing the library, I decided to use hspec. This is mostly because it is the Haskell testinglibrary that I am most familiar with, and it a nice, simple structure for writing tests.[^hspec-choice]
+To handle testing the library, I decided to use hspec. This is mostly because it is the Haskell testing library that I am most familiar with.[^hspec-choice]
 
 Testing the library was a fairly straightforward process for the most part. Though the main issue I ran into was dealing with test data. I wanted to have the expected output data to be hardcoded, and not generated, so that the tests would be more stable, however this would lead to overly verbose tests.
 
@@ -168,6 +168,8 @@ I was able to resolve many instances of this type of issue by assigning the leng
 helloSeed :: Seed
 helloSeed = Seed {unSeed = "8b1a9953c4611296a827abf8c47804d7"}
 ~~~
+
+This solution worked well for data that wasn't too dificult to enter in a Haskell source file, however, when it came to defining image bytestrings this format wasn't very effective.
 
 ## Footnotes
 [^color-stats]: To see how often specific colors were chosen I mapped the color choosing function over a list of String versions of all of the numbers 1 to a high number such as 10000, and took the length of the list after filtering it down to just the desired color. This is one case where ghci really came in handy.
@@ -196,4 +198,4 @@ helloSeed = Seed {unSeed = "8b1a9953c4611296a827abf8c47804d7"}
 
 [^gif-encode]: Actually `encodeColorReducedGifImage` returns a `Either String ByteString` rather than just a `ByteString`. I'm actually unsure exactly why it returns an Either rather than just a bytestring. I think this is due to its use of `encodeGifImageWithPalette` which can "return errors if the palette is ill-formed". However, if it is generating the correctly formed (non-Either) pallete then there should be no reason that the call to `encodeGifImageWithPalette` should return a Left. To solve this difference in the encoding function I just wrapped the result of the function in [a case statement pulling out the Right value](https://github.com/ExcaliburZero/pixelated-avatar-generator/blob/master/src/Graphics/Avatars/Pixelated.hs#L186-L189). I sure hope that it doesn't ever yield a Left.
 
-[^hspec-choice]: I have worked a little bit with HUnit, but I find it a bit more difficult to use than hspec. Specifically, I perfer that hspec allows you to declare and organize tests in an item-test-tree structure, which I find to be a little bit more intuitive and easier to read.
+[^hspec-choice]: I have worked a little bit with HUnit, but I find it to be more difficult to use than hspec. Specifically, I perfer that hspec allows you to declare and organize tests in an item-test-tree structure, which I find to be a little bit more intuitive and easier to read.
