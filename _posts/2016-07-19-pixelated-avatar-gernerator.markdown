@@ -140,15 +140,12 @@ For example, to encode an image using the GIF format, you would either need to j
 encodeGifImageWithPalette :: Image Pixel8 -> Palette -> Either String ByteString
 ~~~
 
-Luckily, however, I was able to eventually find a function `encodeColorReducedGifImage` which would encode RGB images into the GIF format by handling the generation of the color pallete.[^gif-encode]
-
-## Executable
-Once I had gotten the main functionality of the library working, I decided to make a simple executable
+Luckily, however, I was able to eventually find a function `encodeColorReducedGifImage` which would encode RGB images into the GIF format by handling the generation of the color palette.[^gif-encode]
 
 ## Testing
 To handle testing the library, I decided to use hspec. This is mostly because it is the Haskell testing library that I am most familiar with.[^hspec-choice]
 
-Testing the library was a fairly straightforward process for the most part. Though the main issue I ran into was dealing with test data. I wanted to have the expected output data to be hardcoded, and not generated, so that the tests would be more stable, however this would lead to overly verbose tests.
+Testing the library was a fairly straightforward process for the most part. Though the main issue I ran into was dealing with test data. I wanted to have the expected output data to be hard-coded, and not generated, so that the tests would be more stable, however this would lead to overly verbose tests.
 
 For example, when testing the `colorFromSeed` function I would need to provide an input seed and the expected output color. However, the seed definitions were some what lengthy and not very expressive.
 
@@ -169,7 +166,9 @@ helloSeed :: Seed
 helloSeed = Seed {unSeed = "8b1a9953c4611296a827abf8c47804d7"}
 ~~~
 
-This solution worked well for data that wasn't too dificult to enter in a Haskell source file, however, when it came to defining image bytestrings this format wasn't very effective.
+This solution worked well for data that wasn't too difficult to enter in a Haskell source file, however, when it came to defining image bytestrings this format wasn't very effective.
+
+I eventually decided that the best way to include the image data to test against, I would include the actual images files and read them in as test data. The issue with this solution was that hspec requires the tests to not use IO, and since I would be reading in the image bytestring from a file I would have to perform IO.
 
 ## Footnotes
 [^color-stats]: To see how often specific colors were chosen I mapped the color choosing function over a list of String versions of all of the numbers 1 to a high number such as 10000, and took the length of the list after filtering it down to just the desired color. This is one case where ghci really came in handy.
