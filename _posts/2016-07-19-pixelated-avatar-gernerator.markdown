@@ -26,7 +26,7 @@ Since the md5 hash function can take in a String of a given length and return a 
 ~~~
 
 ## Color Generation
-For the avatar images, I decided that each avatar would have a given color from some given set of possible colors. At first I figured that I could make use of the fact that each of the digits in the seed values was hexadecimal, so I decided to have 8 different possible colors.
+For the avatar images, I decided that each avatar would have a main color which would be used for the pattern of the avatar, and a white background. The main color would be a given color from some given set of possible colors. At first I figured that I could make use of the fact that each of the digits in the seed values was hexadecimal, so I decided to have 8 different possible colors.[^8-colors]
 
 In order to generate the color I decided to take the first two digits of the seed, average them into one hexadecimal digit, and have each color correspond to two of the possible resulting digits. However, after using ghci to generate a bunch of colors from a list of seeds I found that the statistical distribution of the colors chosen tended to be heavily focused on one specific color. Almost half of the seeds I would feed into the color choosing function I had written would yield orange.[^color-stats]
 
@@ -176,6 +176,8 @@ However, besides those few issues, testing the library was not too dificult.
 The
 
 ## Footnotes
+[^8-colors]: I could have also gone with havng 16 possible colors, however I figured that 16 would be a bit too many colors to have. So I decided to go with 8 colors instead, as it seemed like a reasonable number of colors, and is a divisor of 16.
+
 [^color-stats]: To see how often specific colors were chosen I mapped the color choosing function over a list of String versions of all of the numbers 1 to a high number such as 10000, and took the length of the list after filtering it down to just the desired color. This is one case where ghci really came in handy.
 
 [^color]: Actually I only realized that this was the cause of the issue when I re-read [the code for the function](https://github.com/ExcaliburZero/pixelated-avatar-generator/blob/bebf6d81b91680bccc4ce7db3e7d739261573282/src/Graphics/Avatars/Pixelated.hs#L31-L43) when I was writing this article. I suppose that's what I get for writing code at 3 AM.
