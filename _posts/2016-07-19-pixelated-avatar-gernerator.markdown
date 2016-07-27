@@ -25,14 +25,14 @@ Since the md5 hash function can take in a String of a given length and return a 
 "8b1a9953c4611296a827abf8c47804d7"
 ~~~
 
-## Color Generation
+## Color Choosing
 For the avatar images, I decided that each avatar would have a main color which would be used for the pattern of the avatar, and a white background. The main color would be a given color from some given set of possible colors. At first I figured that I could make use of the fact that each of the digits in the seed values was hexadecimal, so I decided to have 8 different possible colors.[^8-colors]
 
-In order to generate the color I decided to take the first two digits of the seed, average them into one hexadecimal digit, and have each color correspond to two of the possible resulting digits. However, after using ghci to generate a bunch of colors from a list of seeds I found that the statistical distribution of the colors chosen tended to be heavily focused on one specific color. Almost half of the seeds I would feed into the color choosing function I had written would yield orange.[^color-stats]
+In order to choose the color for an avatar I decided to take the first two digits of the seed, average them into one hexadecimal digit, and have each color correspond to two of the possible resulting digits. However, after using ghci to generate a bunch of colors from a list of seeds I found that the statistical distribution of the colors chosen tended to be heavily focused on one specific color. Almost half of the seeds I would feed into the color choosing function I had written would yield orange.[^color-stats]
 
-I only later realized that the issue was caused by an incorrect averaging of the hexadecimal digits, as averaged the values returned using `ord` from `Data.Char` and mapped them to the returned values of `ord` on the hexadecimal digits. The values of `ord '9'` and `ord 'a'` are not next to each other.[^color]
+I only later realized that the issue was caused by an incorrect averaging of the hexadecimal digits. I took the values returned by using `ord` from `Data.Char` on the first two digits, averaged them together, and then mapped the resulting "digit" to the returned values of `ord` on the hexadecimal digits. However, this resulted in some issuses as there is a notable gap between the values of `ord '9'` and `ord 'a'`.[^color]
 
-Once I noticed the issue with the uneven distribution of colors I decided to come up with a new algorithm for the color choosing function. The algorithm I ended upcoming up with was to take the first two characters of the seed value, sum their `ord` values, and take the modulus 8 of the resulting number and map the resulting digit 0-7 to a color.[^color-alg-2]
+Once I noticed the issue with the uneven distribution of colors, I decided to come up with a new algorithm for the color choosing function. The algorithm I ended upcoming up with was to take the first two characters of the seed value, sum their `ord` values plus one, take the modulus 8 of the resulting number, and map the resulting digit 0-7 to a color.[^color-alg-2] [^color-sum]
 
 ~~~ haskell
 colorFromSeed :: Seed -> Color
@@ -183,6 +183,8 @@ The
 [^color]: Actually I only realized that this was the cause of the issue when I re-read [the code for the function](https://github.com/ExcaliburZero/pixelated-avatar-generator/blob/bebf6d81b91680bccc4ce7db3e7d739261573282/src/Graphics/Avatars/Pixelated.hs#L31-L43) when I was writing this article. I suppose that's what I get for writing code at 3 AM.
 
 [^color-alg-2]: Originally I tried taking the product of the ord values, however that did not result in a very good color distribution. So I tried summing them instead, and that yielded a good distribution.
+
+[^color-sum]: The additional one included in the sum of the digits was actually just leftover from when I was attempting to take the product of the digits. I just forgot to replace the one with a zero when I changed the algorithm to use the sum instead. Though the extra one doesn't alter the algorithm too much, as it just shifts the color mapping over by one. 
 
 [^pattern-type]: I decided to go with a pixelated pattern like the one used by GitHub as opposed to the more geometric patterns used by websites like Techdirt as I thought it would be much easier to implement. That way I would be able to just create the pattern as a two dimensional list and convert it directly into an image.
 
