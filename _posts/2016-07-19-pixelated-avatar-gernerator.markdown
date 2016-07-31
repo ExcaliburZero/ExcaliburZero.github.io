@@ -43,13 +43,13 @@ colorFromSeed = genColor . dSum . unSeed
 ~~~
 
 ## Pattern Generation
-Once I had handled color generation for avatars, I decided to move on to generating the pattern for the avatar images. I decided to try to achieve a similar type of pattern to that used by GitHub in its default avatars.[^pattern-type]
+Once I had implemented color choosing for avatars, I decided to move on to generating the pattern for the avatar images. I decided to try to achieve a similar type of pattern to that used by GitHub in its default avatars.[^pattern-type]
 
 ![An example of a default GitHub avatar]({{ site.baseurl }}/images/avatar_github.png)
 
 The type of pattern used in default GitHub avatars starts with a 3x5px pattern which is then reflected over the y axis, such that it overlaps in the middle, resulting in a 5x5px pattern.[^github-pattern]
 
-Instead of using a 5x5px pattern, I decided to try creating an 8x8px pattern. I figured that I could create the pattern by generating a 4x4px pattern and then reflecting it over the y-axis without overlap.
+Instead of using a 5x5px pattern, I decided to try creating an 8x8px pattern. I figured that I could create the pattern by generating a 4x4px pattern and then reflecting it over the y-axis without overlap.[^8-pattern]
 
 I thought that I would be able to create the 4x8px pattern by creating a list of 32 binary values and then converting that into a grid. I noticed that the seed values, being md5 hashes, were 32 digits in length, so I figured that I could just round them each up or down to a False or True value around 7, and then use those boolean values to represent colored and uncolored pixels in the pattern.[^md5-coincidence] [^map-map]
 
@@ -172,7 +172,7 @@ I eventually decided that the best way to include the image data to test against
 
 However, besides those few issues, testing the library was not too dificult.
 
-## Documentation
+## Conclusion
 The
 
 ## Footnotes
@@ -186,9 +186,11 @@ The
 
 [^color-sum]: The additional one included in the sum of the digits was actually just leftover from when I was attempting to take the product of the digits. I just forgot to replace the one with a zero when I changed the algorithm to use the sum instead. Though the extra one doesn't alter the algorithm too much, as it just shifts the color mapping over by one. 
 
-[^pattern-type]: I decided to go with a pixelated pattern like the one used by GitHub as opposed to the more geometric patterns used by websites like Techdirt as I thought it would be much easier to implement. That way I would be able to just create the pattern as a two dimensional list and convert it directly into an image.
+[^pattern-type]: I decided to go with a pixelated pattern like the one used by GitHub as opposed to the more geometric patterns used by websites like Techdirt, as I thought it would be much easier to implement. That way I would be able to just create the pattern as a two dimensional list and convert it directly into an image.
 
 [^github-pattern]: I only really looked at the GitHub avatar pattern in this detail after I had designed the pattern generation algorithm I would use. Before then I had only really taken note that the avatars were symmetrical on the y-axis. If figured that by not analyzing the patterns too much, I would be able to be more creative in the design of the pattern generation algorithm I would create.
+
+[^8-pattern]: I decided to use an 8x8px pattern because it would provide sufficeient detail, while also being a power of two. Before doing the algorithm design, I tried manually creating some patterns using GIMP, and I found that using 8x8px patterns would work well.
 
 [^md5-coincidence]: The fact that the two both happened to be in amounts of 32 was actually entirely by coincidence. I kind of just lucked out there.
 
