@@ -51,12 +51,12 @@ After looking over a few default GitHub avatars, I found that the patterns start
 
 Instead of using a 6x6 bordered pattern, I decided to try creating an 8x8 pattern with no border. I figured that I could create the pattern by generating a 4x8 pattern and then reflecting it over the y-axis without overlap.[^8-pattern]
 
-I figured that I would be able to create the 4x8 pattern by creating a list of 32 binary values and then convert it into a grid. I noticed that the seed values, being md5 hashes, were 32 digits in length, so I figured that I could just round them each up or down to a False or True value around 7, and then use those boolean values to represent colored and uncolored pixels in the pattern.[^md5-coincidence] [^map-map]
+I figured that I would be able to create the 4x8 pattern by creating a list of 32 binary values and then convert it into a grid. I noticed that the seed values, being hexidecimal md5 hashes, were 32 digits in length, so I figured that I could just round them each up or down to a False or True value around 7, and then use those boolean values to represent colored and uncolored pixels in the pattern.[^md5-coincidence] [^map-map]
 
 ~~~ haskell
 numToGrid :: String -> [[Bool]]
 numToGrid s = grid
-  where grid = (map . map) convertToPixel $ (map . map) ord numGrid
+  where grid = (map . map) (convertToPixel . ord) numGrid
         numGrid = chunksOf 4 s
         convertToPixel = (> ord '7')
 ~~~
@@ -79,7 +79,7 @@ For testing purposes, I also added a show instance to the AvatarGrid type I used
 
 Once I had implemented the generation of both avatar colors and patterns from a seed value, I was able to just combine the two into an Avatar datatype. Then I could just create a function which would generate a whole Avatar instance from a given seed value.
 
-Since the avatar patterns start at a size of 8x8px, any image created directly from them would be quite small. In order to increase the size of avatar images I figured that I could write a function which would upscale the size of an avatar by a given scaling factor.
+Since the avatar patterns start at a size of 8x8, any image created directly from them would be quite small. In order to increase the size of avatar images I figured that I could write a function which would upscale the size of an avatar by a given scaling factor.
 
 In order to upscale avatar patterns I would need to use a function which would be able to take a given list and scale it up by a given integer factor. Unfortunately, I was unable to find such a function, so I implemented it and exported it as a utility function.[^scale-list]
 
@@ -88,7 +88,7 @@ In order to upscale avatar patterns I would need to use a function which would b
 [0,0,0,1,1,1]
 ~~~
 
-By making a `scaleAvatar` function available, avatars could easily be scaled up to sizes of powers of two, such as 128x128px and 256x256px.
+By making a `scaleAvatar` function available, avatars could easily be scaled up to common sizes of powers of two, such as 128x128px and 256x256px.
 
 ## Image Generation
 Since I finished implementing the generation of avatars, I next needed to work on converting avatars into images. After doing some searching on Hackage for libraries for working with images, I found [JuicyPixels](https://hackage.haskell.org/package/JuicyPixels).
