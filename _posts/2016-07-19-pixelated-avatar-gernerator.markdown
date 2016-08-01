@@ -43,15 +43,15 @@ colorFromSeed = genColor . dSum . unSeed
 ~~~
 
 ## Pattern Generation
-Once I had implemented color choosing for avatars, I decided to move on to generating the pattern for the avatar images. I decided to try to achieve a similar type of pattern to that used by GitHub in its default avatars.[^pattern-type]
+Once I had implemented color choosing for avatars, I decided to move on to designing an algorithm for generating the patterns for avatar images. I decided to try to achieve a similar type of pattern to the patterns used by GitHub in its default avatars.[^pattern-type]
 
 ![An example of a default GitHub avatar]({{ site.baseurl }}/images/avatar_github.png)
 
-The type of pattern used in default GitHub avatars starts with a 3x5px pattern which is then reflected over the y axis, such that it overlaps in the middle, resulting in a 5x5px pattern.[^github-pattern]
+After looking over a few default GitHub avatars, I found that the patterns start with a 3x5 pattern which is then reflected over the y axis, such that it overlaps in the middle, resulting in a 5x5 pattern. A 1/2 width border is then applied around the 5x5 pattern to create a 6x6 pattern.[^github-pattern]
 
-Instead of using a 5x5px pattern, I decided to try creating an 8x8px pattern. I figured that I could create the pattern by generating a 4x4px pattern and then reflecting it over the y-axis without overlap.[^8-pattern]
+Instead of using a 6x6 bordered pattern, I decided to try creating an 8x8 pattern with no border. I figured that I could create the pattern by generating a 4x8 pattern and then reflecting it over the y-axis without overlap.[^8-pattern]
 
-I thought that I would be able to create the 4x8px pattern by creating a list of 32 binary values and then converting that into a grid. I noticed that the seed values, being md5 hashes, were 32 digits in length, so I figured that I could just round them each up or down to a False or True value around 7, and then use those boolean values to represent colored and uncolored pixels in the pattern.[^md5-coincidence] [^map-map]
+I figured that I would be able to create the 4x8 pattern by creating a list of 32 binary values and then convert it into a grid. I noticed that the seed values, being md5 hashes, were 32 digits in length, so I figured that I could just round them each up or down to a False or True value around 7, and then use those boolean values to represent colored and uncolored pixels in the pattern.[^md5-coincidence] [^map-map]
 
 ~~~ haskell
 numToGrid :: String -> [[Bool]]
@@ -61,7 +61,7 @@ numToGrid s = grid
         convertToPixel = (> ord '7')
 ~~~
 
-Once I could generate the 4x8px half of the pattern, the full pattern could be easily created by just reflecting it over the y-axis. This could be done by mapping a function over the first dimension of the list which would return the contained list concatenated with the reverse of its self.[^pattern-expose]
+Once I could generate the 4x8 half of the pattern, the full pattern could be easily created by just reflecting it over the y-axis. This could be done by mapping a function over the first dimension of the list which would return the contained list concatenated with the reverse of its self.[^pattern-expose]
 
 For testing purposes, I also added a show instance to the AvatarGrid type I used to represent the pattern. The show function would return a visual representation of the pattern using the [full block Unicode symbol](http://www.fileformat.info/info/unicode/char/2588/index.htm). That way it would be easier to tell what the pattern would look like, even before I had implemented the actual image generation.[^pattern-show]
 
@@ -170,13 +170,13 @@ This solution worked well for data that wasn't too difficult to enter in a Haske
 
 I eventually decided that the best way to include the image data to test against, I would include the actual images files and read them in as test data. The issue with this solution was that hspec requires the tests to not use IO, and since I would be reading in the image bytestring from a file I would have to perform IO. In this case I made the controversial decision of using `unsafePerformIO` to load in the image file bytestrings without them being held within the IO monad.[^unsafePerformIO]
 
-However, besides those few issues, testing the library was not too dificult.
+However, besides those few issues, testing the library was not too difficult.
 
 ## Conclusion
 The
 
 ## Footnotes
-[^8-colors]: I could have also gone with havng 16 possible colors, however I figured that 16 would be a bit too many colors to have. So I decided to go with 8 colors instead, as it seemed like a reasonable number of colors, and is a divisor of 16.
+[^8-colors]: I could have also gone with having 16 possible colors, however I figured that 16 would be a bit too many colors to have. So I decided to go with 8 colors instead, as it seemed like a reasonable number of colors, and is a divisor of 16.
 
 [^color-stats]: To see how often specific colors were chosen I mapped the color choosing function over a list of String versions of all of the numbers 1 to a high number such as 10000, and took the length of the list after filtering it down to just the desired color. This is one case where ghci really came in handy.
 
@@ -190,7 +190,7 @@ The
 
 [^github-pattern]: I only really looked at the GitHub avatar pattern in this detail after I had designed the pattern generation algorithm I would use. Before then I had only really taken note that the avatars were symmetrical on the y-axis. If figured that by not analyzing the patterns too much, I would be able to be more creative in the design of the pattern generation algorithm I would create.
 
-[^8-pattern]: I decided to use an 8x8px pattern because it would provide sufficeient detail, while also being a power of two. Before doing the algorithm design, I tried manually creating some patterns using GIMP, and I found that using 8x8px patterns would work well.
+[^8-pattern]: I decided to use an 8x8px pattern because it would provide sufficient detail, while also being a power of two. Before doing the algorithm design, I tried manually creating some patterns using GIMP, and I found that using 8x8px patterns would work well.
 
 [^md5-coincidence]: The fact that the two both happened to be in amounts of 32 was actually entirely by coincidence. I kind of just lucked out there.
 
