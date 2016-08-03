@@ -172,6 +172,26 @@ I eventually decided that the best way to include the image data to test against
 
 However, besides those few issues, testing the library was not too difficult.
 
+## Executable
+In addition to the library, I decided to make a simple executable program for generating avatar images. In doing so, I would be able to test out how the library would be used, in addition to providing a language-agnostic interface to the avatar generating capabilities of the library.
+
+At first I beagn working on a simple program which would take in a filepath and a seed string, and generate an avatar image from the seed string and save it to the given filepath. I also made use of the Show instance for the Avatar type in order to print out a text representation of the generated avatar image.[^old-executable]
+
+~~~
+$ stack exec pixelated-avatar-generator image.png "Hello, World"
+Creating avatar at image.png
+Grey
+█ ████ █
+
+  ████  
+█  ██  █
+████████
+█ █  █ █
+█      █
+████████
+Successfully created avatar, and saved it to image.png
+~~~
+
 ## Conclusion
 The
 
@@ -211,3 +231,5 @@ The
 [^hspec-choice]: I have worked a little bit with HUnit, but I find it to be more difficult to use than hspec. Specifically, I prefer that hspec allows you to declare and organize tests in an item-test-tree structure, which I find to be a little bit more intuitive and easier to read.
 
 [^unsafePerformIO]: While `unsafePerformIO` is a function which should not really be used in Haskell as it defeats the promise of function purity, I felt that its use in this case was okay for the following reasons. First, it was mainly being used to load in a value that is only being used as expected output in tests and would thus only be treated as if it were a constant that had been manually entered into the source file. Second, the type of IO being performed should not throw any exceptions or cause any output effects. While it is reading in information from files and could thus throw an IOException, as the test image files are in version control and in the Cabal build file as extra source files they should always be present in the correct locations and readable, and thus such exceptions should not be thrown in this case. Third, as I previously noted, including the actual images files and reading them in would be more expressive in terms of showcasing the actual data. It is a bit easier to tell that you are dealing with an image when you are reading in an image file rather than just dealing with a cryptic-looking string.
+
+[^old-executable]: The source code for the original executable can be found in the [old project commits on GitHub](https://github.com/ExcaliburZero/pixelated-avatar-generator/blob/b57669fece575cc7d576e0a8f5f86a1f3c99ed5b/app/Main.hs).
