@@ -237,7 +237,7 @@ The
 
 [^pattern-show]: When I first implemented the show instance, I used the @ symbol to represent the pattern. However, I found that by using a block symbol instead, I would be able to get a better representation of the pattern. Though, the symbol does sometimes cause visual issues on some applications.[^coveralls-fix]
 
-[^coveralls-fix]: Originially I included a link to a Coveralls.io coverage report on the library which displayed question mark within diamond symbols in place of the block symbol. However, at some point between when I wrote the footnote and when I went backover the link while editing this article, Coveralls apparently fixed this display issue.
+[^coveralls-fix]: Originially I included a link to a Coveralls.io coverage report on the library which displayed question mark within diamond symbols in place of the block symbol. However, at some point between when I wrote the footnote and when I went back over the link while editing this article, Coveralls apparently fixed this display issue.
 
 [^scale-list]: I thought that `Data.List` would likely have a function for scaling lists up by a given factor since it seemed like a common list operation, however, unfortunately it does not have any such function from what I can tell.
 
