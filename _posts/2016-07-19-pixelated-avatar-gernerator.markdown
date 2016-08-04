@@ -196,7 +196,18 @@ Once I had finished implementing the basic avatar generating functionality in th
 
 However, I realized that the simple program structure I had created would be insufficient for dealing with command flags that would be used to specify the use of such functionality. I figured that it would be best to change the program to use a proper command line interface Haskell library.
 
-After doing some searching on Hackage for command flag parsing libraries, I eventually found [cli](https://hackage.haskell.org/package/cli). Cli allows one to handle command flags using a fairly straightforward DSL, in addition to also providing other common functionality that many cli applications use such as help info generation and command line visual effects.
+After doing some searching on Hackage for command flag parsing libraries, I eventually found [cli](https://hackage.haskell.org/package/cli). Cli allows one to handle command flags using a fairly straightforward DSL, in addition to also providing other common functionality that many cli applications use such as generating help info and command line visual effects.
+
+~~~haskell
+main = defaultMain $ do
+    programName "test-cli"
+    programDescription "test CLI program"
+    flagA    <- flag $ FlagShort 'a' <> FlagLong "aaa"
+    allArgs  <- remainingArguments "FILE"
+    action $ \toParam -> do
+        putStrLn $ "using flag A : " ++ show (toParam flagA)
+        putStrLn $ "args: " ++ show (toParam allArgs)
+~~~
 
 ## Conclusion
 The
@@ -224,7 +235,9 @@ The
 
 [^pattern-expose]: While I ended up setting up the library such that one would call a function to generate both the avatar color and pattern at the same time, and not need to directly call the pattern generating function `generateAvatarGrid`, I did leave that function exposed. I figured that someone might have some use-case for generating just the pattern. However, I did not expose the underlying functions used for generating the pattern as they were fairly use-case specific.
 
-[^pattern-show]: When I first implemented the show instance, I used the @ symbol to represent the pattern. However, I found that by using a block symbol instead, I would be able to get a better representation of the pattern. Though, the symbol does sometimes cause [visual issues on some applications](https://coveralls.io/builds/7071873/source?filename=src%2FGraphics%2FAvatars%2FPixelated.hs#L267).
+[^pattern-show]: When I first implemented the show instance, I used the @ symbol to represent the pattern. However, I found that by using a block symbol instead, I would be able to get a better representation of the pattern. Though, the symbol does sometimes cause visual issues on some applications.[^coveralls-fix]
+
+[^coveralls-fix]: Originially I included a link to a Coveralls.io coverage report on the library which displayed question mark within diamond symbols in place of the block symbol. However, at some point between when I wrote the footnote and when I went backover the link while editing this article, Coveralls apparently fixed this display issue.
 
 [^scale-list]: I thought that `Data.List` would likely have a function for scaling lists up by a given factor since it seemed like a common list operation, however, unfortunately it does not have any such function from what I can tell.
 
