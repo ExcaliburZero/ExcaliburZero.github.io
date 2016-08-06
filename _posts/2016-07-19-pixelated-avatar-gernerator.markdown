@@ -178,7 +178,7 @@ In addition to the library, I decided to make a simple executable program for ge
 At first I began working on a simple program which would take in a filepath and a seed string, and generate an avatar image from the seed string and save it to the given filepath. I also made use of the Show instance for the Avatar type in order to print out a text representation of the generated avatar image.[^old-executable]
 
 ~~~
-$ stack exec pixelated-avatar-generator image.png "Hello, World"
+$ pixelated-avatar-generator image.png "Hello, World"
 Creating avatar at image.png
 Grey
 █ ████ █
@@ -209,7 +209,25 @@ main = defaultMain $ do
         putStrLn $ "args: " ++ show (toParam allArgs)
 ~~~
 
-## Conclusion
+So I started to rewrite the executable using the cli library. Luckily, the DSL used by the library was fairly easy to pickup for the most part. Most of the difficulty in writing the executable was in its design, rather than in working with the library.
+
+At first, I figured that I would setup the executable so that the user would supply a series of image paths and seed strings, and would be able to set a flag to have the application use random seed strings instead. However, I figured that this would likely seem to the user like an odd method of specifying images, so I decided to instead just have the executable use random seed strings. That way the user would just have to specify the image paths where they would want random avatars to be saved to.
+
+~~~
+$ pixelated-avatar-generator image1.png image2.png
+Successfully created 2 avatars.
+~~~
+
+Next I needed to come up with a way to generate random seed strings. Luckily, this ended up being a fairly simple process. Previous to working on this application, I had not worked with random number generation in Haskell. After doing some searching I found the `System.Random` library. After looking over the documentation I found that using `randomIO` would help.
+
+Using `randomIO`, I would be able to generate a random number, then in order to generate the seed string I could just convert the generated number into a String.[^random-number]
+
+~~~haskell
+>>> show <$> (randomIO :: IO Double)
+"0.18637400040717844"
+~~~
+
+# Conclusion
 The
 
 ## Footnotes
@@ -254,3 +272,5 @@ The
 [^language-agnostic]: If figured that by offering an executable, developers using languages other than Haskell would be able to make use of the functionality of the library via the command line.
 
 [^old-executable]: The source code for the original executable can be found in the [old project commits on GitHub](https://github.com/ExcaliburZero/pixelated-avatar-generator/blob/b57669fece575cc7d576e0a8f5f86a1f3c99ed5b/app/Main.hs).
+
+[^random-number]: I'm not very familiar with `System.Random`, but I'd assume that like most random number generation standard libraries in various languages, it generates psuedo-random numbers. Though, I figured that this would not matter much in this use case, as it would not matter if the generated avatar images could be predicted. As long as the generated numbers would be different from each other, even when generated realivtively quickly from one another, then there would be no issue.
