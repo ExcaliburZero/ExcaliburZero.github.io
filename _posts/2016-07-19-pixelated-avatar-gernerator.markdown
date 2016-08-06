@@ -220,7 +220,7 @@ Successfully created 2 avatars.
 
 Next I needed to come up with a way to generate random seed strings. Luckily, this ended up being a fairly simple process. Previous to working on this application, I had not worked with random number generation in Haskell. After doing some searching I found the `System.Random` library. After looking over the documentation I found that using `randomIO` would help.
 
-Using `randomIO`, I would be able to generate a random number, then in order to generate the seed string I could just convert the generated number into a String.[^random-number]
+Using `randomIO`, I would be able to generate a random number, then in order to generate the seed string I could just convert the generated number into a String.[^random-number] [^random-string]
 
 ~~~haskell
 >>> show <$> (randomIO :: IO Double)
@@ -274,3 +274,5 @@ The
 [^old-executable]: The source code for the original executable can be found in the [old project commits on GitHub](https://github.com/ExcaliburZero/pixelated-avatar-generator/blob/b57669fece575cc7d576e0a8f5f86a1f3c99ed5b/app/Main.hs).
 
 [^random-number]: I'm not very familiar with `System.Random`, but I'd assume that like most random number generation standard libraries in various languages, it generates psuedo-random numbers. Though, I figured that this would not matter much in this use case, as it would not matter if the generated avatar images could be predicted. As long as the generated numbers would be different from each other, even when generated realivtively quickly from one another, then there would be no issue.
+
+[^random-string]: One possible issue that this method of generating random strings is that all of the strings are doubles, and thus consist only of digits and decimal points. This could be an issue with some usages of random strings. Since the avatar generation works with md5 checksums
