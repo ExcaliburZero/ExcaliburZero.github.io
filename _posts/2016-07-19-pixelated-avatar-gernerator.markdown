@@ -227,6 +227,43 @@ Using `randomIO`, I would be able to generate a random number, then in order to 
 "0.18637400040717844"
 ~~~
 
+Since I then had a way to generate random seed strings, I was then able to setup the executable to generate random avatar images at user-specifed filepaths.
+
+Next I decided to add a flag to the executable that would allow the user to change the size of the avatar images that are generated. By default, I had the program generate images at a size of 256x256px, however this could be changed by using a user-specified scaling factor. The scaling factor would then be multiplied by 8 to get the resulting image size, since this ishow the library handles image sizing.
+
+Using the cli library, handling the flag parsing was not too dificult. The library allows one to create command flags by specifying what the flags should be called, and whether or not they take in a parameter. It also allows you to give a description of the flag which is included in the program help information. The library also requires you to give a parameter parser if the flag takes in a parameter.
+
+~~~
+flagS <- flagParam
+  (FlagLong "scaling-factor" <> FlagDescription scalingFlagDescription)
+  (FlagRequired scaleParser)
+~~~
+
+Since the scaling factor would need a parameter to get the user's desired custom scaling factor, I would need to put together a parser to parse valid scaling factors. Considering how the library handles avatar scaling, a valid scaling factor would have to be an integer value that is greater than zero.[^param-parsers]
+
+~~~haskell
+scaleParser :: String -> Either String Int
+~~~
+
+I decided to approach implementing the parser, by first checking to make sure that the given string is a valid positive integer, and then use the `read :: String -> Int` function to obtain the actual value.
+
+First I would need to check if the given string was a natural number (0,1..). I could do this easily by checking if all of the the characters in the string are digits using the `isDigit` function from `Data.Char`. This would rule out all non-numbers, decimal values, and negative integers.
+
+After that I would need to check if the string was zero. In order to determine if the string is zero, I would have to check if all of the characters in the string are zero. That would rule out a literal "0" string as well as any zero string that has additional leading zeroes "000".
+
+If the given string is a natural number and is not zero, then I would just return the value given by parsing the string with `read :: String -> Int`.
+
+~~~haskell
+scaleParser :: String -> Either String Int
+scaleParser string
+    | isPosInt string = Right ((read :: String -> Int) string)
+    | otherwise       = Left "The given String is not a positive integer"
+  where
+    isPosInt s   = isNaturalNum s && isNotZero s
+    isNaturalNum = all isDigit
+    isNotZero s = not $ all (== '0') s
+~~~
+
 # Conclusion
 The
 
@@ -275,4 +312,6 @@ The
 
 [^random-number]: I'm not very familiar with `System.Random`, but I'd assume that like most random number generation standard libraries in various languages, it generates psuedo-random numbers. Though, I figured that this would not matter much in this use case, as it would not matter if the generated avatar images could be predicted. As long as the generated numbers would be different from each other, even when generated realivtively quickly from one another, then there would be no issue.
 
-[^random-string]: One possible issue that this method of generating random strings is that all of the strings are doubles, and thus consist only of digits and decimal points. This could be an issue with some usages of random strings. Since the avatar generation works with md5 checksums
+[^random-string]: One possible issue that this method of generating random strings is that all of the strings are doubles, and thus consist only of digits and decimal points. This could be an issue with some usages of random strings.
+
+[^param-parsers]: Unfortunately, the cli library does not provide commonly used parameter parsers to use in flag specifications.I likely could have looked around for libraries that provide common parsers to find a parser that would work for my cases. However I figured that the parser would not be too diffucult to implement, so I just went ahead and implemented it.
