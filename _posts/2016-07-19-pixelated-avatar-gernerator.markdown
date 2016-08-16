@@ -262,21 +262,23 @@ scaleParser string
   where
     isPosInt s   = isNaturalNum s && isNotZero s
     isNaturalNum = all isDigit
-    isNotZero s = not $ all (== '0') s
+    isNotZero s  = not $ all (== '0') s
 ~~~
 
-Once I had implemented the scaling factor parser, I was able to set it to be used to get a custom scaling factor when the user includes the `--scaling-factor` flag.
+Once I had implemented the scaling factor parser, I was able to set it to be used to get a custom scaling factor when the user includes the `--scaling-factor` flag.[^scaling-factor-example]
 
 ~~~bash
 $ pixelated-avatar-generator image1.png image2.png --scaling-factor=4
 Successfully created 2 avatars.
 ~~~
 
-Then, within the body of the executable I would be able to get the custom scaling factor if the user gave one, or use a default scaling factor if they did not provide a scaling factor.[^to-param]
+Then, within the body of the executable I would be able to get the custom scaling factor if the user gave one, or use a default scaling factor if they did not provide a scaling factor.[^to-param] [^default-scaling-factor]
 
 ~~~haskell
 let scalingFactor = fromMaybe defaultScalingFactor (toParam flagS)
 ~~~
+
+
 
 # Conclusion
 The
@@ -318,7 +320,7 @@ The
 
 [^hspec-choice]: I have worked a little bit with HUnit, but I find it to be more difficult to use than hspec. Specifically, I prefer that hspec allows you to declare and organize tests in an item-test-tree structure, which I find to be a little bit more intuitive and easier to read.
 
-[^unsafePerformIO]: While `unsafePerformIO` is a function which should not really be used in Haskell as it defeats the promise of function purity, I felt that its use in this case was okay for the following reasons. First, it was mainly being used to load in a value that is only being used as expected output in tests and would thus only be treated as if it were a constant that had been manually entered into the source file. Second, the type of IO being performed should not throw any exceptions or cause any output effects. While it is reading in information from files and could thus throw an IOException, as the test image files are in version control and in the Cabal build file as extra source files they should always be present in the correct locations and readable, and thus such exceptions should not be thrown in this case. Third, as I previously noted, including the actual images files and reading them in would be more expressive in terms of showcasing the actual data. It is a bit easier to tell that you are dealing with an image when you are reading in an image file rather than just dealing with a cryptic-looking string.
+[^unsafePerformIO]: While `unsafePerformIO` is a function which should not really be used in Haskell as it defeats the promise of function purity, I felt that its use in this case was okay for the following reasons. First, it was mainly being used to load in a value that is only being used as expected output in tests and would thus only be treated as if it were a constant that had been manually entered into the source file. Second, the type of IO being performed should not throw any exceptions or cause any output effects. While it is reading in information from files and could thus throw an IOException, as the test image files are in version control and in the Cabal build file as extra source files they should always be present in the correct locations and readable, and thus such exceptions should not be thrown in this case. Third, as I previously noted, including the actual images files and reading them in would be more expressive in terms of showcasing the actual data. It is a bit easier to tell that you are dealing with an image when you are reading in an image file rather than just dealing with a cryptic-looking string. If there is a better way of handling IO in hpsec, please let me know.
 
 [^language-agnostic]: If figured that by offering an executable, developers using languages other than Haskell would be able to make use of the functionality of the library via the command line.
 
@@ -330,4 +332,8 @@ The
 
 [^param-parsers]: Unfortunately, the cli library does not provide commonly used parameter parsers to use in flag specifications.I likely could have looked around for libraries that provide common parsers to find a parser that would work for my cases. However I figured that the parser would not be too diffucult to implement, so I just went ahead and implemented it.
 
-[^to-param]: In this code sample, the `toParam` value is a function passed into the executable's "action" function. It takes in an application flag or parameter and converts it into the corresponding value. In this case, since the `--scaling-factor` flag is optional, the use of `toParam flagS` returns a `Maybe Int`.
+[^scaling-factor-example]: Looking back on this example run of the executable, I probably should have included some sort of notice that it properly noticed and used the custom scaling factor. For example, I could have had it instead output `Successfully created 2 avatars with a scaling factor of 4.`.
+
+[^to-param]: In this code sample, the `toParam` value is a function passed into the executable's "action" function. It takes in an application flag or parameter and converts it into the corresponding value. In this case, since the `--scaling-factor` flag is optional, the use of `toParam flagS` returns a `Maybe Int`. On second thought, I should probably give `flagS` a more descriptive name.
+
+[^default-scaling-factor]: I actually defined the default scaling factor as a value in the scope of the executable module. Originally I had included it as a regular value within the `scalingFactor` definition line, however I found that it was not immediately obvious as to what the value's purpose was, so I decided to store it in a more descriptive value and move it into the module scope so that it would be easier to locate.
