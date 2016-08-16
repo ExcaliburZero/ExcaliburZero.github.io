@@ -229,6 +229,7 @@ Using `randomIO`, I would be able to generate a random number, then in order to 
 
 Since I then had a way to generate random seed strings, I was then able to setup the executable to generate random avatar images at user-specifed filepaths.
 
+### Custom Scaling
 Next I decided to add a flag to the executable that would allow the user to change the size of the avatar images that are generated. By default, I had the program generate images at a size of 256x256px, however this could be changed by using a user-specified scaling factor. The scaling factor would then be multiplied by 8 to get the resulting image size, since this ishow the library handles image sizing.
 
 Using the cli library, handling the flag parsing was not too dificult. The library allows one to create command flags by specifying what the flags should be called, and whether or not they take in a parameter. It also allows you to give a description of the flag which is included in the program help information. The library also requires you to give a parameter parser if the flag takes in a parameter.
@@ -262,6 +263,19 @@ scaleParser string
     isPosInt s   = isNaturalNum s && isNotZero s
     isNaturalNum = all isDigit
     isNotZero s = not $ all (== '0') s
+~~~
+
+Once I had implemented the scaling factor parser, I was able to set it to be used to get a custom scaling factor when the user includes the `--scaling-factor` flag.
+
+~~~bash
+$ pixelated-avatar-generator image1.png image2.png --scaling-factor=4
+Successfully created 2 avatars.
+~~~
+
+Then, within the body of the executable I would be able to get the custom scaling factor if the user gave one, or use a default scaling factor if they did not provide a scaling factor.[^to-param]
+
+~~~haskell
+let scalingFactor = fromMaybe defaultScalingFactor (toParam flagS)
 ~~~
 
 # Conclusion
@@ -315,3 +329,5 @@ The
 [^random-string]: One possible issue that this method of generating random strings is that all of the strings are doubles, and thus consist only of digits and decimal points. This could be an issue with some usages of random strings.
 
 [^param-parsers]: Unfortunately, the cli library does not provide commonly used parameter parsers to use in flag specifications.I likely could have looked around for libraries that provide common parsers to find a parser that would work for my cases. However I figured that the parser would not be too diffucult to implement, so I just went ahead and implemented it.
+
+[^to-param]: In this code sample, the `toParam` value is a function passed into the executable's "action" function. It takes in an application flag or parameter and converts it into the corresponding value. In this case, since the `--scaling-factor` flag is optional, the use of `toParam flagS` returns a `Maybe Int`.
