@@ -285,7 +285,9 @@ _ <- map (saveRandomAvatar scalingFactor) paths
 ~~~
 
 ### Concurrent Image Creation
+Once I had gotten the executable to have most of the basic features I wanted it to have, I decided to test out how well it would work wneh used to generate a large number of images.
 
+After testing out the executable by having it generate 100 images, I found that it wasn't too slow of a process, but it could have been better.[^100-image-test]
 
 # Conclusion
 The
@@ -344,3 +346,5 @@ The
 [^to-param]: In this code sample, the `toParam` value is a function passed into the executable's "action" function. It takes in an application flag or parameter and converts it into the corresponding value. In this case, since the `--scaling-factor` flag is optional, the use of `toParam flagS` returns a `Maybe Int`. On second thought, I should probably give `flagS` a more descriptive name.
 
 [^default-scaling-factor]: I actually defined the default scaling factor as a value in the scope of the executable module. Originally I had included it as a regular value within the `scalingFactor` definition line, however I found that it was not immediately obvious as to what the value's purpose was, so I decided to store it in a more descriptive value and move it into the module scope so that it would be easier to locate.
+
+[^100-image-test]: To test generating 100 images using the executable I took a bit of a shortcut. I opened up Vim and generated a list of all numbers 1-100 on a single line with a space seperating each, then I just copied that into the clipboard and pasted it at the end of a command to run the executable. Playing VimGolf actually comes in handy at times. `i1<ESC>qayyp<C-A>q98@aqb0i<BS> <ESC>q98@byy`
