@@ -272,12 +272,19 @@ $ pixelated-avatar-generator image1.png image2.png --scaling-factor=4
 Successfully created 2 avatars.
 ~~~
 
-Then, within the body of the executable I would be able to get the custom scaling factor if the user gave one, or use a default scaling factor if they did not provide a scaling factor.[^to-param] [^default-scaling-factor]
+Then, within the body of the executable I would be able to use a custom scaling factor if the user gave one, or use a default scaling factor if they did not provide a scaling factor.[^to-param] [^default-scaling-factor]
 
 ~~~haskell
 let scalingFactor = fromMaybe defaultScalingFactor (toParam flagS)
 ~~~
 
+Since I had created a function that would create and save a random avatar using a given scaling factor to a given filepath, I was able to just perform a parital application using the scaling factor and map the resulting function over the list of image paths in order to generate all of the specified images.
+
+~~~
+_ <- map (saveRandomAvatar scalingFactor) paths
+~~~
+
+### Concurrent Image Creation
 
 
 # Conclusion
@@ -318,7 +325,7 @@ The
 
 [^gif-encode]: Actually `encodeColorReducedGifImage` returns a `Either String ByteString` rather than just a `ByteString`. I'm actually unsure exactly why it returns an Either rather than just a bytestring. I think this is due to its use of `encodeGifImageWithPalette` which can "return errors if the palette is ill-formed". However, if it is generating the correctly formed (non-Either) palette then there should be no reason that the call to `encodeGifImageWithPalette` should return a Left. To solve this difference in the encoding function I just wrapped the result of the function in [a case statement pulling out the Right value](https://github.com/ExcaliburZero/pixelated-avatar-generator/blob/master/src/Graphics/Avatars/Pixelated.hs#L186-L189). I sure hope that it doesn't ever yield a Left.
 
-[^hspec-choice]: I have worked a little bit with HUnit, but I find it to be more difficult to use than hspec. Specifically, I prefer that hspec allows you to declare and organize tests in an item-test-tree structure, which I find to be a little bit more intuitive and easier to read.
+[^hspec-choice]: I have worked a little bit with HUnit, but I find it to be more difficult to use than hspec. Specifically, I prefer that hspec allows you to declare and organize tests in an item-test-tree structure, which I find to be a little bit more intuitive and easier to read. Also, at the time I wrote the library I did not really have any understanding of proprty-based testing, so thus I did not use any proprty testing libraries such as QuickCheck.
 
 [^unsafePerformIO]: While `unsafePerformIO` is a function which should not really be used in Haskell as it defeats the promise of function purity, I felt that its use in this case was okay for the following reasons. First, it was mainly being used to load in a value that is only being used as expected output in tests and would thus only be treated as if it were a constant that had been manually entered into the source file. Second, the type of IO being performed should not throw any exceptions or cause any output effects. While it is reading in information from files and could thus throw an IOException, as the test image files are in version control and in the Cabal build file as extra source files they should always be present in the correct locations and readable, and thus such exceptions should not be thrown in this case. Third, as I previously noted, including the actual images files and reading them in would be more expressive in terms of showcasing the actual data. It is a bit easier to tell that you are dealing with an image when you are reading in an image file rather than just dealing with a cryptic-looking string. If there is a better way of handling IO in hpsec, please let me know.
 
