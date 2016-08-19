@@ -284,10 +284,20 @@ Since I had created a function that would create and save a random avatar using 
 _ <- map (saveRandomAvatar scalingFactor) paths
 ~~~
 
-### Concurrent Image Creation
+### Concurrent Image Generation
 Once I had gotten the executable to have most of the basic features I wanted it to have, I decided to test out how well it would work wneh used to generate a large number of images.
 
 After testing out the executable by having it generate 100 images, I found that it wasn't too slow of a process, but it could have been better.[^100-image-test]
+
+Previously I had done some profiling on the library to see what functions took up the most processing in the process of generating avatar images, but I didn't find any obvious ways of getting the code to run faster.
+
+Thus, instead I decided to look into speed improvements that could be made in the executable. After looking over the code for the executable, I realized that I could get an increase in speed by having the images generated and saved concurrently.
+
+Since the process of creating and saving the images was a map operation, I figured that I would be fairly easy to perform it concurrently. After looking around on Hackage a bit, I found that the `mapConcurrently` function provided by the [async](https://hackage.haskell.org/package/async) library would work.[^concurrency]
+
+~~~
+_ <- mapConcurrently (saveRandomAvatar scalingFactor) paths
+~~~
 
 # Conclusion
 The
@@ -348,3 +358,5 @@ The
 [^default-scaling-factor]: I actually defined the default scaling factor as a value in the scope of the executable module. Originally I had included it as a regular value within the `scalingFactor` definition line, however I found that it was not immediately obvious as to what the value's purpose was, so I decided to store it in a more descriptive value and move it into the module scope so that it would be easier to locate.
 
 [^100-image-test]: To test generating 100 images using the executable I took a bit of a shortcut. I opened up Vim and generated a list of all numbers 1-100 on a single line with a space seperating each, then I just copied that into the clipboard and pasted it at the end of a command to run the executable. Playing VimGolf actually comes in handy at times. `i1<ESC>qayyp<C-A>q98@aqb0i<BS> <ESC>q98@byy`
+
+[^concurrency]: Previous to working on the executable I did not have much experience working with concurrency
